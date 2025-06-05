@@ -14,6 +14,7 @@ WaveManager.__index = WaveManager
 
 type WaveManager = typeof(setmetatable({} :: _Data, WaveManager)) & Data
 
+-- maybe dont make this a class idk?
 function WaveManager.new(plane: MeshPart, octaves: number)
 	local self = setmetatable({}, WaveManager) :: WaveManager
 	self:constructor(plane, octaves)
@@ -30,19 +31,22 @@ function WaveManager.constructor(self: WaveManager, plane, octaves)
 	end
 end
 
-function WaveManager.Update(self: WaveManager)
-	local Wave = EulersWave.new({
-		Amplitude = 5,
-		Phase = 1,
-		Wavelength = 2,
-		Direction = Vector2.new(1, 1),
-	})
+local radians = math.rad(75)
+local dir = Vector2.new(math.cos(radians), math.sin(radians))
 
+local Wave = EulersWave.new({
+	Amplitude = 2,
+	Speed = 1,
+	Wavelength = 5,
+	Direction = dir,
+})
+
+function WaveManager.Update(self: WaveManager)
 	for _, bone in pairs(self.Bones) do
-		if bone:IsA("Bone") then
-            local vertex2 = Vector2.new(bone.Position.X, bone.Position.Z)
-            bone.Position = Wave:CalculateWaveVertex(vertex2, game.Workspace:GetServerTimeNow())
-		end
+		local time = game.Workspace:GetServerTimeNow()
+		local vertex2 = Vector2.new(bone.Position.X, bone.Position.Z)
+		local Ypos = Wave:CalculateWaveVertex(vertex2, time)
+		bone.Position = Vector3.new(bone.Position.X, Ypos, bone.Position.Z)
 	end
 end
 

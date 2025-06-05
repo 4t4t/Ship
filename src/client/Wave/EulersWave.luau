@@ -1,13 +1,17 @@
 --!strict
+
+-- wavedata kinda fucked up
 export type WaveData = {
     Amplitude: number,
-    Phase: number,
+    Speed: number,
     Wavelength: number,
     Direction: Vector2,
 }
 
 export type Data = {
     CalculateWaveVertex: (self: Data, vertex2: Vector2, time: number) -> Vector3,
+    GetWaveData: (self: Data) -> WaveData,
+    SetWaveData: (self: Data, wavedata: WaveData) -> (),
     WaveData: WaveData,
 }
 
@@ -32,13 +36,18 @@ function EulersWave.GetWaveData(self: EulersWave)
     return self.WaveData
 end
 
+function EulersWave.SetWaveData(self: EulersWave, wavedata)
+    self.WaveData = wavedata
+end
+
 function EulersWave.CalculateWaveVertex(self: EulersWave, vertex2: Vector2, time: number)
     local EULERS_CONSTANT = 2.718281828459045
     local vertexPosition = vertex2
-    local dotProduct = self.WaveData.Direction.Unit:Dot(vertexPosition)
-    local phaseTerm = self.WaveData.Phase * dotProduct + time * self.WaveData.Phase
-    local offsetY = self.WaveData.Amplitude * (EULERS_CONSTANT ^ math.sin(phaseTerm) - 1)
-    return Vector3.new(vertexPosition.X, offsetY, vertexPosition.Y)
+    local k = 2 * math.pi / self.WaveData.Wavelength
+    local c = math.sqrt(9.8 / k)
+    local d = self.WaveData.Direction.Unit:Dot(vertexPosition)
+    local p = k * d - c * time
+    return self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(p) - 1
 end
 
 
