@@ -31,7 +31,7 @@ function WaveManager.constructor(self: WaveManager, plane, octaves)
 	end
 end
 
-local radians = math.rad(75)
+local radians = math.rad(0)
 local dir = Vector2.new(math.cos(radians), math.sin(radians))
 
 local Wave = EulersWave.new({
@@ -40,6 +40,7 @@ local Wave = EulersWave.new({
 	Wavelength = 5,
 	Direction = dir,
 })
+
 
 function WaveManager.Update(self: WaveManager)
 	for _, bone in pairs(self.Bones) do
