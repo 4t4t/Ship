@@ -1,18 +1,22 @@
 --!strict
 
 export type WaveData = {
-    Amplitude: number,
-    Speed: number,
-    Wavelength: number,
-    Direction: Vector2,
+	Amplitude: number,
+	Speed: number,
+	Wavelength: number,
+	Direction: Vector2,
 }
 
 export type Data = {
-    CalculateWaveVertex: (self: Data, vertex2: Vector2, time: number) -> Vector3,
-    GetWaveData: (self: Data) -> WaveData,
-    SetWaveData: (self: Data, wavedata: WaveData) -> (),
-    WaveData: WaveData,
+	CalculateWaveVertex: (self: Data, vertex2: Vector2, time: number) -> Vector3,
+	GetWaveData: (self: Data) -> WaveData,
+	SetWaveData: (self: Data, wavedata: WaveData) -> (),
+	WaveData: WaveData,
 }
+
+-- mathematical constants
+local EULERS_CONSTANT = 2.718281828459045
+local TWO_PI = 6.283185307179586
 
 type _Data = {}
 
@@ -28,25 +32,22 @@ function EulersWave.new(wavedata: WaveData)
 end
 
 function EulersWave.constructor(self: EulersWave, wavedata)
-    self.WaveData = wavedata
+	self.WaveData = wavedata
 end
 
 function EulersWave.GetWaveData(self: EulersWave)
-    return self.WaveData
+	return self.WaveData
 end
 
 function EulersWave.SetWaveData(self: EulersWave, wavedata)
-    self.WaveData = wavedata
+	self.WaveData = wavedata
 end
 
 function EulersWave.CalculateWaveVertex(self: EulersWave, vertex2: Vector2, time: number)
-    local EULERS_CONSTANT = 2.718281828459045
-    local vertexPosition = vertex2
-    local k = 2 * math.pi / self.WaveData.Wavelength
-    local c = math.sqrt(9.8 / k)
-    local d = self.WaveData.Direction.Unit:Dot(vertexPosition)
-    return self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(k * d - c * time) - 1
+	local w = TWO_PI / self.WaveData.Wavelength
+	local p = self.WaveData.Speed * w
+	local d = self.WaveData.Direction.Unit:Dot(vertex2) -- dot returns the length of the projected vector
+	return self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(d * w + time * p) - 1
 end
-
 
 return EulersWave
