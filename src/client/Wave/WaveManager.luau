@@ -43,10 +43,10 @@ function WaveManager.Update(self: WaveManager)
 	for _, bone in pairs(self.Bones) do
 		local pos = Wave:CalculateWaveVertex(
 			bone.Position,
-			game.Workspace:GetServerTimeNow()
+			workspace:GetServerTimeNow()
 		)
 
-		bone.Position = pos
+		bone.Transform = bone.CFrame:Inverse() * CFrame.new(pos)
 	end
 end
 

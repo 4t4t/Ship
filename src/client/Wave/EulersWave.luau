@@ -48,7 +48,7 @@ end
 function EulersWave.CalculateWaveVertex(self: EulersWave, xyz: Vector3, time: number)
     local w = TWO_PI / self.WaveData.Wavelength
     local p = math.sqrt(GRAVITATIONAL_PULL / w)
-	 local v = self.WaveData.Direction
+	local v = self.WaveData.Direction
     local d = v:Dot(Vector2.new(xyz.X, xyz.Z))
     local f = w * (d - p * time)
 
