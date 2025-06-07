@@ -1,6 +1,5 @@
 --!strict
 
--- wavedata kinda fucked up
 export type WaveData = {
     Amplitude: number,
     Speed: number,
@@ -46,8 +45,7 @@ function EulersWave.CalculateWaveVertex(self: EulersWave, vertex2: Vector2, time
     local k = 2 * math.pi / self.WaveData.Wavelength
     local c = math.sqrt(9.8 / k)
     local d = self.WaveData.Direction.Unit:Dot(vertexPosition)
-    local p = k * d - c * time
-    return self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(p) - 1
+    return self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(k * d - c * time) - 1
 end
 
 
