@@ -31,13 +31,12 @@ function WaveManager.constructor(self: WaveManager, plane, octaves)
 	end
 end
 
-local radians = math.rad(0)
-local dir = Vector2.new(math.cos(radians), math.sin(radians))
+
 
 local Wave = EulersWave.new({
 	Amplitude = 5,
 	Wavelength = 1,
-	Direction = dir,
+	Direction = Vector2.new(1,0),
 })
 
 function WaveManager.Update(self: WaveManager)
@@ -47,7 +46,7 @@ function WaveManager.Update(self: WaveManager)
 			game.Workspace:GetServerTimeNow()
 		)
 
-		bone.Transform = bone.CFrame:Inverse() * CFrame.new(pos)
+		bone.Position = pos
 	end
 end
 

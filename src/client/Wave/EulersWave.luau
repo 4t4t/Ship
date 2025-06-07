@@ -44,12 +44,16 @@ function EulersWave.SetWaveData(self: EulersWave, wavedata)
 	self.WaveData = wavedata
 end
 
+
 function EulersWave.CalculateWaveVertex(self: EulersWave, xyz: Vector3, time: number)
-	local w = TWO_PI / self.WaveData.Wavelength
-	local p = math.sqrt(GRAVITATIONAL_PULL / w)
-	local f = w * (xyz.X - 1 * time)
-	local Y = self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(f) - 1 
-	return Vector3.new(xyz.X, Y, xyz.Z)
+    local w = TWO_PI / self.WaveData.Wavelength
+    local p = math.sqrt(GRAVITATIONAL_PULL / w)
+	 local v = self.WaveData.Direction
+    local d = v:Dot(Vector2.new(xyz.X, xyz.Z))
+    local f = w * (d - p * time)
+
+    local Y = self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(f) - 1
+    return Vector3.new(xyz.X, Y, xyz.Z)
 end
 
 return EulersWave
