@@ -31,25 +31,23 @@ function WaveManager.constructor(self: WaveManager, plane, octaves)
 	end
 end
 
-local radians = math.rad(45)
+local radians = math.rad(0)
 local dir = Vector2.new(math.cos(radians), math.sin(radians))
 
 local Wave = EulersWave.new({
 	Amplitude = 5,
-	Speed = 1,
 	Wavelength = 1,
 	Direction = dir,
 })
 
 function WaveManager.Update(self: WaveManager)
 	for _, bone in pairs(self.Bones) do
-		local cFrame = bone.CFrame
-		local Ypos = Wave:CalculateWaveVertex(
-			Vector2.new(cFrame.Position.X, cFrame.Position.Z),
+		local pos = Wave:CalculateWaveVertex(
+			bone.Position,
 			game.Workspace:GetServerTimeNow()
 		)
 
-		bone.Transform = cFrame:Inverse() * CFrame.new(cFrame.Position.X, Ypos, cFrame.Position.Z) -- shitfuckery
+		bone.Transform = bone.CFrame:Inverse() * CFrame.new(pos)
 	end
 end
 

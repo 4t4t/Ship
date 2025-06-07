@@ -2,7 +2,6 @@
 
 export type WaveData = {
 	Amplitude: number,
-	Speed: number,
 	Wavelength: number,
 	Direction: Vector2,
 }
@@ -11,14 +10,16 @@ export type Data = {
 	CalculateWaveVertex: (self: Data, vertex2: Vector2, time: number) -> Vector3,
 	GetWaveData: (self: Data) -> WaveData,
 	SetWaveData: (self: Data, wavedata: WaveData) -> (),
+}
+
+type _Data = {
 	WaveData: WaveData,
 }
 
--- mathematical constants
+-- mathematical constants & physical
 local EULERS_CONSTANT = 2.718281828459045
 local TWO_PI = 6.283185307179586
-
-type _Data = {}
+local GRAVITATIONAL_PULL = 9.8
 
 local EulersWave = {}
 EulersWave.__index = EulersWave
@@ -43,11 +44,12 @@ function EulersWave.SetWaveData(self: EulersWave, wavedata)
 	self.WaveData = wavedata
 end
 
-function EulersWave.CalculateWaveVertex(self: EulersWave, vertex2: Vector2, time: number)
+function EulersWave.CalculateWaveVertex(self: EulersWave, xyz: Vector3, time: number)
 	local w = TWO_PI / self.WaveData.Wavelength
-	local p = self.WaveData.Speed * w
-	local d = self.WaveData.Direction.Unit:Dot(vertex2) -- dot returns the length of the projected vector
-	return self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(d * w + time * p) - 1
+	local p = math.sqrt(GRAVITATIONAL_PULL / w)
+	local f = w * (xyz.X - 1 * time)
+	local Y = self.WaveData.Amplitude * EULERS_CONSTANT ^ math.sin(f) - 1 
+	return Vector3.new(xyz.X, Y, xyz.Z)
 end
 
 return EulersWave
